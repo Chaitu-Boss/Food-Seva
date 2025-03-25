@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AllRoutes from './Routes';
 import ChatAI from './components/ChatBot';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
 
         {/* ChatBot */}
         <ChatAI />
+        <Footer/>
       </div>
     </Router>
   )

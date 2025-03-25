@@ -3,6 +3,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Carrot, Beef, CalendarRange, Package, Factory } from "lucide-react";
+import { Button } from "@/components/ui/button"
 
 const foodTypes = [
   "Processed food",
@@ -381,8 +382,8 @@ const DonateForm = () => {
   };
 
   return (
-    <div className="pt-20 px-10 h-screen flex justify-between gap-10 bg-[#F0ECCF]">
-      <div className="w-xl bg-transparent rounded-lg p-6 mb-6 flex-1">
+    <div className="p-0 h-fit px-10 flex justify-between gap-15 pb-2 bg-[#F0ECCF]">
+      <div className="w-xl bg-transparent rounded-lg p-6 flex-1">
         <h2 className="text-xl  mb-2 font-bold">Donate Food</h2>
         <p className="text-gray-600 mb-4">
           Help people in need by listing surplus food items for donation.
@@ -503,7 +504,7 @@ const DonateForm = () => {
 
       {/* Display Added Items Side by Side */}
 
-      <div className="w-1/2 bg-transparent  rounded-lg p-6 mb-6 flex flex-col justify-x-center ">
+      <div className="w-1/2 bg-transparent  rounded-lg p-6  flex flex-col justify-x-center ">
         <h1 className="text-2xl font-bold mb-2">List of Items</h1>
         {donatedItems.length === 0 ? (
           <div className="text-center font-bold text-gray-800">
