@@ -79,30 +79,46 @@ const NgoClaim = () => {
 
   const startDelivery = () => {
     if (routePath.length === 0) return;
-
+  
     setDeliveryStarted(true);
     socket.emit("startDelivery");
-
+  
     let index = 0;
     const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath) / 1000;
     const intervalTime = (totalDistance * 1000) / (routePath.length * 10) * 1000;
-
-    const moveVehicle = setInterval(() => {
+  
+    const moveVehicle = setInterval(async () => {
       if (index < routePath.length) {
         const newLocation = routePath[index];
         setCurrentLocation(newLocation);
         setTraveledPath((prev) => [...prev, newLocation]);
-
+  
         const traveledDistance = (index / routePath.length) * totalDistance;
         setRemainingDistance(Math.max(0, totalDistance - traveledDistance));
-
+  
         setEta(Math.round((remainingDistance * 1000) / 10));
-
+  
         index++;
       } else {
         clearInterval(moveVehicle);
         setDeliveryCompleted(true);
         setEta(0);
+  
+        try {
+          const email = user?.email;
+          if (email) {
+            const response = await axios.post("http://localhost:5000/api/auth/reward", { id: donor._id.toString() });
+            if (response.status === 200) {
+              alert("Donation was successfully received by NGO & reward is credited!");
+            } else {
+              throw new Error("Failed to credit reward.");
+            }
+          }
+        } catch (error) {
+          console.error("Error in reward API:", error);
+          alert("Failed to process the reward.");
+        }
+  
         setTimeout(() => navigate("/"), 2000);
       }
     }, intervalTime);
@@ -190,6 +206,13 @@ const NgoClaim = () => {
           className="absolute bottom-5 right-15 bg-[#13333E] text-white text-md font-semibold px-6 py-3 rounded-full shadow-md cursor-pointer"
         >
           {loading ? "Processing..." : "Confirm Order"}
+        </button>
+
+        <button
+          onClick={onConfirmOrder}
+          className="absolute bottom-5 left-10 bg-[#13333E] text-white text-md font-semibold px-6 py-3 rounded-full shadow-md cursor-pointer"
+        >
+          Contact Donor
         </button>
 
       </div>

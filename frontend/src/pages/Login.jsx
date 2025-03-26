@@ -20,7 +20,9 @@ const Login = () => {
             // Store token in localStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
-
+            if( role === 'donor' ){
+            await axios.post("http://localhost:5000/api/auth/loginwithweb3",{email})
+            }
             alert("Login Successful!");
             navigate('/');  // Redirect to dashboard/homepage
         } catch (err) {
