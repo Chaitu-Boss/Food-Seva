@@ -35,23 +35,24 @@
 
 ## Tech Stack
 - **Frontend**: React.js + Tailwind CSS
-- **Backend**: Node.js + Express.js
+- **Backend**: Node.js + Express.js , Flask
 - **Database**: MongoDB
-- **Machine Learning**: OpenCV for food quality analysis
-- **Maps & Tracking**: Google Maps API / Mapbox for real-time food tracking
+- **Machine Learning**: OpenCV for food quality analysis ( 25K images dataset used to train model )
+- **Maps & Tracking**: Google Maps API for real-time food tracking
 - **Generative AI**: 
   - **Hugging Face** for NLP models and chatbot enhancements
-  - **OpenAI GPT models** for chatbot and AI-driven insights
   - **LangChain** for AI-driven automation and decision-making
+  -  **LLMs** for providing responses through query embedding
 - **Chatbot**: NLP-powered assistant to guide users and answer donation-related queries
 
 ## How to Run
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/Chaitu-Boss/Food-Seva.git
-cd food-seva
+cd Food-Seva
 ```
 ### 2️⃣ Install Dependencies
+- Navigate to the `frontend/` folder and run:
 ```bash
 npm install
 ```
@@ -59,12 +60,19 @@ npm install
 ```bash
 npm run dev
 ```
-### 4️⃣ Backend Setup
-- Navigate to the `server/` folder and run:
+### 4️⃣ Node Backend Setup
+- Navigate to the `backend/` folder and run:
 ```bash
 npm install
 node server.js
 ```
+### 5️⃣ Flask Backend Setup
+- Navigate to the `flask/` folder and run:
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
 
 ## Future Enhancements
 - **Integration with Food Safety Authorities** for certification of donated food.
