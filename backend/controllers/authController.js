@@ -31,9 +31,10 @@ export const sendOtp = asyncHandler(async (req, res) => {
 export const verifyOtp = asyncHandler(async (req, res) => {
   const { phone, otp } = req.body;
 
+  const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
   try {
     const verificationCheck = await client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
-      .verificationChecks.create({ to: phone, code: otp });
+      .verificationChecks.create({ to: formattedPhone, code: otp });
 
     if (verificationCheck.status === 'approved') {
       res.status(200).json({ success: true, message: 'OTP Verified Successfully!' });
@@ -47,7 +48,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
 
 
 export const signup = async (req, res) => {
-  const { name, email, phone, role, registeredNumber, password } = req.body;
+  const { name, email, phone, role, registeredNumber, password,address } = req.body;
 
   try {
     const Model = role === 'donor' ? Donor : NGO;
@@ -64,6 +65,7 @@ export const signup = async (req, res) => {
       email,
       phone,
       role, 
+      address,
       ...(role === 'donor' ? {} : { registeredNumber }),
       password: hashedPassword,
     });
@@ -75,31 +77,6 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: 'Error in signup', error: error.message });
   }
 };
-
-// export const login = async (req, res) => {
-//     const { email, password, role } = req.body;
-  
-//     try {
-//       const Model = role === 'donor' ? Donor : NGO;
-//       const user = await Model.findOne({ email });
-  
-//       if (!user) {
-//         return res.status(404).json({ message: 'User not found' });
-//       }
-  
-//       const isMatch = await bcrypt.compare(password, user.password);
-//       if (!isMatch) {
-//         return res.status(400).json({ message: 'Invalid credentials' });
-//       }
-
-//       const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
-  
-//       res.status(200).json({ token, message: 'Login successful', user });
-  
-//     } catch (error) {
-//       res.status(500).json({ message: 'Error in login', error: error.message });
-//     }
-//   };
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
 

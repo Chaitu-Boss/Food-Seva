@@ -23,7 +23,7 @@ const ChatAI = () => {
 
   return (
     <div>
-      <button onClick={() => setIsOpen(true)}className="fixed flex bottom-5 right-5 bg-purple-700 text-white space-x-4 p-4 rounded-full shadow-lg hover:bg-purple-800 transition z-50 rounded-full">
+      <button onClick={() => setIsOpen(true)}className="fixed flex bottom-5 right-5 bg-[#13333E] text-white space-x-4 p-4 rounded-full shadow-lg hover:bg-[#1a282c] transition z-50 rounded-full cursor-pointer">
         <img src={chatbot} alt="" className="w-10 rounded-full border-none"/>
       </button>
 
@@ -43,9 +43,9 @@ const ChatAI = () => {
               exit={{ y: 50, opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="bg-purple-700 text-white text-lg p-4 flex justify-between items-center">
+              <div className="bg-[#1a282c] text-white text-lg p-4 flex justify-between items-center">
                 <span className="font-semibold">DaanBot</span>
-                <button onClick={() => setIsOpen(false)} className="text-white text-lg">&times;</button>
+                <button onClick={() => setIsOpen(false)} className="text-white cursor-pointer text-lg">&times;</button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-100">
                 {humanMessages.map((message, index) => (
@@ -57,7 +57,7 @@ const ChatAI = () => {
                     </div>
                     {aiMessages[index] && (
                       <div className="flex justify-start">
-                        <div className="bg-purple-700 text-white p-3 rounded-lg max-w-xs shadow-md">
+                        <div className="bg-[#1a282c] text-white p-3 rounded-lg max-w-xs shadow-md">
                           {aiMessages[index]}
                         </div>
                       </div>
@@ -75,7 +75,7 @@ const ChatAI = () => {
                 />
                 <button
                   onClick={handleSend}
-                  className="bg-purple-700 text-white p-3 ml-2 rounded-lg cursor-pointer hover:bg-purple-800 transition"
+                  className="bg-[#13333E] text-white p-3 ml-2 rounded-lg cursor-pointer hover:bg-[#1a282c] transition"
                 >
                   ➤
                 </button>
