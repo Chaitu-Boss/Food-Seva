@@ -48,7 +48,7 @@
 ## How to Run
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-repo/food-seva.git
+git clone https://github.com/Chaitu-Boss/Food-Seva.git
 cd food-seva
 ```
 ### 2️⃣ Install Dependencies
@@ -57,7 +57,7 @@ npm install
 ```
 ### 3️⃣ Start the Development Server
 ```bash
-npm start
+npm run dev
 ```
 ### 4️⃣ Backend Setup
 - Navigate to the `server/` folder and run:
