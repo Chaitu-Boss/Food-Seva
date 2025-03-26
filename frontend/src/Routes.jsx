@@ -7,6 +7,9 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import DonateForm from './pages/DonateForm.jsx';
 import Dashboard from './pages/Dashboard.jsx'
+import LiveTracking from './components/LiveTracking.jsx';
+import NgoRequest from './pages/NgoRequest.jsx';
+import NgoClaim from './pages/NgoClaim.jsx';
 
 const AllRoutes = () => {
   return (
@@ -19,6 +22,9 @@ const AllRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/Donor-upload-Food-Form" element={<DonateForm />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/maps-testing" element={<LiveTracking />} />
+      <Route path="/ngo-request" element={<NgoRequest />} />
+      <Route path="/ngo-claim" element={<NgoClaim />} />
     </Routes>
   )
 }
