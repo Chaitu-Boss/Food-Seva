@@ -1,42 +1,72 @@
-import React from 'react'
-import image from '../assets/image.png'
-const AboutUs = () => {
-    return (
-        <div className="min-h-screen bg-gray-100 text-gray-900 px-6 py-10 ">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start mt-40 gap-8">
-            {/* Left Side - Image */}
-            <div className="md:w-1/3">
-              <img
-                src={image}
-                alt="About Us"
-                className="rounded-lg shadow-lg"
-              />
-            </div>
-    
-            {/* Right Side - Text Content */}
-            <div className="md:w-2/3">
-              <h2 className="text-3xl font-bold mb-4">About Our Organization</h2>
-              <p className="text-gray-700 mb-4">
-                You may have heard about our organization, seen our work, or even participated in our events.
-                But who are we? What do we stand for? What is our mission?
-              </p>
-              <p className="text-gray-700 mb-4">
-                Our mission is to spread knowledge, create a sense of community, and work towards a better future.
-                We were founded with the vision of making a positive impact on society through various initiatives,
-                education, and outreach programs.
-              </p>
-              <p className="text-gray-700 mb-4">
-                Our principles are rooted in inclusivity, service, and progress. We believe in the power of 
-                collective efforts and the role of knowledge in shaping a better tomorrow.
-              </p>
-              <p className="text-gray-700 mb-4">
-                We welcome everyone to be a part of our movement, to learn, contribute, and grow together. 
-                Join us in making a meaningful difference.
-              </p>
-            </div>
-          </div>
-        </div>
-      );
+import { motion } from 'framer-motion';
+
+export default function AboutUs() {
+  return (
+    <div className="relative min-h-screen bg-[#eeecdd] text-black flex flex-col items-center justify-center p-6">
+
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-4xl text-center"
+      >
+        <h1 className="text-4xl md:text-5xl pb-2 font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-black
+         to-black">
+          Bridging Surplus to Need
+        </h1>
+        <p className="text-lg md:text-xl text-black max-w-3xl mx-auto">
+          We ensure that excess food reaches those in need, reducing waste and fighting hunger through seamless technology and real-time tracking.
+        </p>
+      </motion.div>
+
+      <div className="grid md:grid-cols-3 gap-6 mt-12 max-w-5xl">
+        {features.map((feature, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.2 }}
+            className="p-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg"
+          >
+            <h3 className="text-xl font-semibold mb-2 text-[#13333d]">{feature.title}</h3>
+            <p className="text-black text-sm">{feature.description}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="mt-12 text-center"
+      >
+        <h2 className="text-3xl font-bold mb-4 text-[#13333d]">Join Us</h2>
+        <p className="text-black mb-6 max-w-xl">
+          Whether you are a donor, NGO, or volunteer, be part of the change and help make a difference.
+        </p>
+        <a
+          href="/get-involved"
+          className="px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-[#13333d] to-[#13333d] rounded-xl shadow-lg hover:scale-105 transition"
+        >
+          Get Involved
+        </a>
+      </motion.div>
+    </div>
+  );
 }
 
-export default AboutUs
+const features = [
+  {
+    title: "Seamless Food Donation",
+    description: "Easily list surplus food and ensure zero wastage.",
+  },
+  {
+    title: "Real-Time Tracking",
+    description: "NGOs can track live deliveries just like Swiggy/Zomato.",
+  },
+  {
+    title: "Impact at Scale",
+    description: "Redirecting excess food to those in need, reducing hunger.",
+  },
+];
+
