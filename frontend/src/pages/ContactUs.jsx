@@ -6,9 +6,9 @@ const ContactUs = () => {
     return (
         <div className="container">
 
-            <div className="min-h-screen bg-gray-900 text-white px-80 py-10">
+            <div className="min-h-screen bg-[#eeecdd] text-white px-80 py-10">
                 <div className="text-center mb-10 mt-5">
-                    <h2 className="text-3xl font-bold">Contact Us</h2>
+                    <h2 className="text-4xl font-bold text-black">Contact Us</h2>
                     {/* <p className="text-gray-400 mt-2 max-w-2xl mx-auto">
                        Feel free to reach us at anytime
                     </p> */}
@@ -23,8 +23,8 @@ const ContactUs = () => {
                                     <img src={house} alt="" height={20} width={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-blue-400">Address</h3>
-                                    <p className="text-gray-300">4671 Sugar Camp Road, Owatonna, Minnesota, 55060</p>
+                                    <h3 className="text-xl font-semibold text-blue-800">Address</h3>
+                                    <p className="text-black">4671 Sugar Camp Road, Owatonna, Minnesota, 55060</p>
                                 </div>
                             </div>
                             <div className="flex items-center space-x-4">
@@ -32,8 +32,8 @@ const ContactUs = () => {
                                     <img src={phone} alt="" height={20} width={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-blue-400">Phone</h3>
-                                    <p className="text-gray-300">561-456-2321</p>
+                                    <h3 className="text-xl font-semibold text-blue-800">Phone</h3>
+                                    <p className="text-black">561-456-2321</p>
                                 </div>
                             </div>
                             <div className="flex items-center space-x-4">
@@ -41,8 +41,8 @@ const ContactUs = () => {
                                     <img src={email} alt="" height={20} width={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-blue-400">Email</h3>
-                                    <p className="text-gray-300">example@email.com</p>
+                                    <h3 className="text-xl font-semibold text-blue-800">Email</h3>
+                                    <p className="text-black">example@email.com</p>
                                 </div>
                             </div>
                         </div>
