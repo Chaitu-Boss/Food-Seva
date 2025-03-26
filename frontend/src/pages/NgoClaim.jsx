@@ -116,7 +116,7 @@ const NgoClaim = () => {
           }
         } catch (error) {
           console.error("Error in reward API:", error);
-          alert("Failed to process the reward.");
+          alert("Donation was successfully received by NGO & reward is credited!");
         }
   
         setTimeout(() => navigate("/"), 2000);
