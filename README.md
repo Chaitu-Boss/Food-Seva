@@ -44,6 +44,11 @@
   - **LangChain** for AI-driven automation and decision-making
   -  **LLMs** for providing responses through query embedding
 - **Chatbot**: NLP-powered assistant to guide users and answer donation-related queries
+- **Blockchain**: Alchemy , Solidity , Hardhat , ethers.js
+  - **Alchemy** for providing RPC url for Ethereum - Sapolia testnet
+  - **Solidity** for creation of smart contracts
+  -  **Hardhat** for deployment of smart contracts
+  -  **ethers.js** for connecting javascript to Ethereum blockchain
 
 ## How to Run
 ### 1️⃣ Clone the Repository
