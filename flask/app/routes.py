@@ -1,13 +1,30 @@
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
 from flask import Blueprint,request,jsonify
 from geopy.distance import geodesic
 from app.utils.sendSms import sendSms
 from app.utils.getResponse import getResponse
+import requests
+import cv2
+import tensorflow as tf
+from PIL import Image
+import numpy as np
+from io import BytesIO
 import os
 
 routes = Blueprint('routes', __name__)
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+cloudinary.config( 
+    cloud_name = "dgnvupmsf", 
+    api_key = "625988952518527", 
+    api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
+model = tf.keras.models.load_model(r"C:\Users\Chaitanya Raut\Desktop\Bowser-Stack-LOC7\flask\app\utils\food_classifier.h5")
+
+def upload_to_cloudinary(file):
+    response = cloudinary.uploader.upload(file)
+    return response["secure_url"]
 
 @routes.route('/')
 def index():
@@ -21,13 +38,20 @@ NGO_LIST = [
     {"name": "Food Relief NGO", "phone": "+918779631531", "address": {"coordinates": [18.936541, 72.815234]}},
     {"name": "Hunger Free India", "phone": "+919152747228", "address": {"coordinates": [28.6900, 77.1200]}}
 ]
+def predict_image(image_url):
+    response = requests.get(image_url)
+    image = Image.open(BytesIO(response.content)).convert("RGB")
+    image = image.resize((224, 224))
+    image_array = np.array(image) / 255.0
+    image_array = np.expand_dims(image_array, axis=0)
 
+    prediction = model.predict(image_array)
+    label = "Fresh" if prediction[0] > 0.5 else "Rotten"
+    return label
 @routes.route("/upload-food", methods=["POST"])
 def upload_food():
     try:
-
         data = request.get_json()
-
         donor_name=data["donor"]
         food_details = ", ".join([f"{item['totalQuantity']} of {item['foodName']}" for item in data["foodItems"]])
         donor_location = (data["pickupLocation"]["coordinates"]["lat"], data["pickupLocation"]["coordinates"]["lng"])
@@ -62,19 +86,23 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@routes.route("/predict", methods=["POST"])
-def predict():
-    try:
-        if "image" not in request.files:
-            return jsonify({"error": "No image uploaded"}), 401
-    
-        image = request.files["image"]
-        if image.filename == "":
-            return jsonify({"error": "No selected file"}), 400
-    
-        image_path = os.path.join(UPLOAD_FOLDER, image.filename)
-        image.save(image_path)  # Save the image
+@routes.route("/uploadoncloud", methods=["POST"])
+def uploadoncloud():
+    if "images" not in request.files:
+        return jsonify({"error": "No images uploaded"}), 400
 
-        return jsonify({"message": "Image uploaded successfully!", "image_path": image_path})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    predictions = []
+    files = request.files.getlist("images")
+
+    for file in files:
+        image_url = upload_to_cloudinary(file)  # Ensure this function works properly
+        if image_url:
+            label = predict_image(image_url) # Ensure this function returns a value
+            predictions.append({"image_url": image_url, "prediction": label})
+        else:
+            return jsonify({"error": "Image upload failed"}), 500  # Handle failed uploads
+
+    if not predictions:
+        return jsonify({"error": "No valid predictions"}), 400
+    
+    return jsonify({"message": "Upload successful", "predictions": predictions}), 200  # ✅ Always return response

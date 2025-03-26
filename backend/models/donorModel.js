@@ -14,7 +14,10 @@ const donorSchema = new mongoose.Schema({
   foodPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Food" }],
   createdAt: { type: Date, default: Date.now },
   password: { type: String , required: true },
-  role: { type: String , required: true }
+  role: { type: String , required: true },
+  wallet: { type: String },
+  rewards: { type: Number, default: 0 },
+  privateKey: { type: String},
 });
 
 const Donor = mongoose.model("Donor", donorSchema);
