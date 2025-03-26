@@ -37,9 +37,9 @@ const loginwithweb3 = async (req, res) => {
 const reward = async (req, res) => {
   try {
     const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    const { email } = req.body;
+    const { id } = req.body;
     const amountEth = 0.006;
-    const user = await Donor.findOne({ email });
+    const user = await Donor.findById({ id });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -47,7 +47,7 @@ const reward = async (req, res) => {
     const amountInr = amountEth * ethToInrRate;
     const tx = await tokenContract.transfer(user.wallet, ethers.parseUnits(amountEth.toString(), "ether"));
     await tx.wait();
-    const updatedUser = await Donor.findOneAndUpdate({ email: email }, { rewards: user.rewards + amountInr });
+    const updatedUser = await Donor.findOneAndUpdate({ email: user.email }, { rewards: user.rewards + amountInr });
     client.messages
       .create({
         body: "Your Donation Was Successfully Received by the NGO. Reward Has Been Sent To Your Wallet",

@@ -53,7 +53,7 @@ const Navbar = () => {
           )}
 
           {isDonor && (
-            <NavLink to="/Donor-upload-Food-Form" className="bg-neutral-600 font-medium text-white ">
+            <NavLink to="/Donor-upload-Food-Form" className="font-medium text-white ">
               <span className='bg-[#13333E] py-2 px-4 font-barlow rounded-br-xl rounded-tl-xl hover:rounded-tr-xl hover:rounded-bl-xl'>
                 Donate Now <span role="img" aria-label="heart"></span>
               </span>
