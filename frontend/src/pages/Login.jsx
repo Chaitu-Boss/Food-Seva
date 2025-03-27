@@ -17,21 +17,20 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:5000/api/auth/login', { email, password , role });
             
-            // Store token in localStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
             if( role === 'donor' ){
             await axios.post("http://localhost:5000/api/auth/loginwithweb3",{email})
             }
             alert("Login Successful!");
-            navigate('/');  // Redirect to dashboard/homepage
+            navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
         }
     };
 
     return (
-        <div className="container mx-auto mt-20 max-w-md p-8 border border-gray-300 rounded-lg shadow-lg">
+        <div className="container mx-auto mt-20 bg-white max-w-md p-8 border  border-gray-300 rounded-lg shadow-lg">
             <div className='py-4'>
             <h1 className="text-3xl font-bold text-center p-2 underline">Login</h1>
             {error && <p className="text-red-500 text-center">{error}</p>}
@@ -60,7 +59,6 @@ const Login = () => {
                     />
                 </div>
 
-                {/* Role Selection (Donor or NGO) */}
                 <div className="mb-4 py-4">
                     <label className="block text-gray-700 font-bold mb-2">Login as:</label>
                     <div className="flex space-x-4">

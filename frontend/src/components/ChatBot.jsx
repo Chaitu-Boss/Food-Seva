@@ -11,20 +11,24 @@ const ChatAI = () => {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    axios.post("http://localhost:8080/chat", { user_input:input })
+    axios
+      .post("http://localhost:8080/chat", { user_input: input })
       .then((response) => {
-      const aiResponse = response.data.response;
-      console.log(aiResponse);
-      setAiMessages((prev) => [...prev, aiResponse]);
-      })
+        const aiResponse = response.data.response;
+        console.log(aiResponse);
+        setAiMessages((prev) => [...prev, aiResponse]);
+      });
     setHumanMessages((prev) => [...prev, input]);
     setInput("");
   };
 
   return (
     <div>
-      <button onClick={() => setIsOpen(true)}className="fixed flex bottom-5 right-5 bg-[#13333E] text-white space-x-4 p-4 rounded-full shadow-lg hover:bg-[#1a282c] transition z-50 rounded-full cursor-pointer">
-        <img src={chatbot} alt="" className="w-10 rounded-full border-none"/>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed flex bottom-5 right-5 bg-[#13333E] text-white space-x-4 p-3 rounded-full shadow-lg hover:bg-[#1a282c] transition z-50 rounded-full cursor-pointer"
+      >
+        <img src={chatbot} alt="" className="w-10 rounded-full border-none" />
       </button>
 
       <AnimatePresence>
@@ -45,7 +49,12 @@ const ChatAI = () => {
             >
               <div className="bg-[#1a282c] text-white text-lg p-4 flex justify-between items-center">
                 <span className="font-semibold">DaanBot</span>
-                <button onClick={() => setIsOpen(false)} className="text-white cursor-pointer text-lg">&times;</button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-white cursor-pointer text-lg"
+                >
+                  &times;
+                </button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-100">
                 {humanMessages.map((message, index) => (

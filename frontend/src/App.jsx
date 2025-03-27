@@ -11,7 +11,7 @@ const App = () => {
       <div className="flex flex-col overflow-x-hidden">
         <Navbar />
 
-        <div className="flex-1 overflow-auto pt-[64px]">  
+        <div className="flex-1 overflow-auto pt-[64px] bg-[#eeecdd]">  
           <AllRoutes />
         </div>
 

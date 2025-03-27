@@ -6,8 +6,8 @@ module.exports = {
   solidity: "0.8.28",
   networks: {
     sepolia: {
-      url: process.env.SEPOLIA_RPC_URL, // Add your Alchemy/Infura Sepolia RPC
-      accounts: [process.env.PRIVATE_KEY], // Your Wallet Private Key
+      url: process.env.SEPOLIA_RPC_URL, 
+      accounts: [process.env.PRIVATE_KEY],
     },
   },
 };

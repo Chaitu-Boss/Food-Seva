@@ -15,11 +15,11 @@ describe("FoodDonation Contract", function () {
     await foodDonation.connect(addr1).donateFood("Paneer Tikka Masala", 1, "Mumbai");
 
     const donations = await foodDonation.getAllDonations();
-    expect(donations[0].length).to.equal(1); // Check if one donation exists
-    expect(donations[1][0]).to.equal("Paneer Tikka Masala"); // Check food details
-    expect(donations[2][0]).to.equal(1); // Check quantity
-    expect(donations[3][0]).to.equal("Mumbai"); // Check location
-    expect(donations[5][0]).to.equal(false); // Check claimed status
+    expect(donations[0].length).to.equal(1);
+    expect(donations[1][0]).to.equal("Paneer Tikka Masala");
+    expect(donations[2][0]).to.equal(1);
+    expect(donations[3][0]).to.equal("Mumbai");
+    expect(donations[5][0]).to.equal(false);
   });
 
   it("Should allow multiple donations", async function () {
@@ -36,11 +36,11 @@ describe("FoodDonation Contract", function () {
     await foodDonation.connect(addr1).donateFood("Milk", 5, "Pune");
 
     let donations = await foodDonation.getAllDonations();
-    expect(donations[5][0]).to.equal(false); // Initially unclaimed
+    expect(donations[5][0]).to.equal(false);
 
     await foodDonation.connect(addr2).claimFood(0);
     donations = await foodDonation.getAllDonations();
-    expect(donations[5][0]).to.equal(true); // Now claimed
+    expect(donations[5][0]).to.equal(true);
   });
 
   it("Should revert if trying to claim an already claimed donation", async function () {

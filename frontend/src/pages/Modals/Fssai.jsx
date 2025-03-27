@@ -1,31 +1,44 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "@fontsource/space-grotesk";
 
 const complianceChecks = [
-  { id: 1, label: "Labeling and packaging meets regulatory standards", link: "#" },
-  { id: 2, label: "Hygiene protocols for food preparation", link: "#" },
-  { id: 3, label: "Licensing and registration validity", link: "#" },
-  { id: 4, label: "Storage conditions compliance", link: "#" },
+  {
+    id: 1,
+    label: "Labeling and packaging meets regulatory standards",
+    link: "https://westregion.fssai.gov.in/Save-Food-Share-Food.php",
+  },
+  {
+    id: 2,
+    label: "Hygiene protocols for food preparation",
+    link: "https://nutritionconnect.org/food-safety-standards-authority-india-fssai-guiding-optimisation-surplus-food-donation",
+  },
+  {
+    id: 3,
+    label: "Licensing and registration validity",
+    link: "https://sharefood.eatrightindia.gov.in/pdf/Surplus-food-draft-regulation.pdf",
+  },
+  {
+    id: 4,
+    label: "Storage conditions compliance",
+    link: "https://westregion.fssai.gov.in/pdf/share-food.pdf",
+  },
   { id: 5, label: "All ingredients and additives are approved", link: "#" },
 ];
 
 const Fssai = ({ isOpen, onClose, onConfirm }) => {
   const [checkedItems, setCheckedItems] = useState({});
 
-  // Reset checkboxes when modal opens
   useEffect(() => {
     if (isOpen) {
       setCheckedItems({});
     }
   }, [isOpen]);
 
-  // Handle checkbox state
   const handleCheckboxChange = (id) => {
     setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Check if all checkboxes are ticked
   const allChecked = complianceChecks.every((item) => checkedItems[item.id]);
 
   return (
@@ -33,11 +46,9 @@ const Fssai = ({ isOpen, onClose, onConfirm }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       className="fixed inset-0 flex items-center justify-center p-6"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      overlayClassName="fixed inset-0 backdrop-blur-xs bg-opacity-50"
     >
-      {/* Glassmorphic Card */}
-      <div className="bg-[#EEecdd] backdrop-blur-lg mt-36 border border-white/20 rounded-xl p-10 max-w-3xl w-full">
-        {/* Header Section */}
+      <div className="bg-[#EEecdd] backdrop-blur-lg mt-36 border border-white/20 rounded-xl z-50 p-10 max-w-3xl w-full">
         <h1 className="text-4xl font-bold text-[#13333E] text-center mb-2 tracking-wide">
           Ensuring FSSAI Compliance
         </h1>
@@ -45,7 +56,6 @@ const Fssai = ({ isOpen, onClose, onConfirm }) => {
           Read the guidelines and verify compliance before submitting.
         </p>
 
-        {/* Compliance Checklist */}
         <form className="space-y-3">
           {complianceChecks.map((item) => (
             <div
@@ -61,13 +71,15 @@ const Fssai = ({ isOpen, onClose, onConfirm }) => {
                 />
                 <span className="text-[#13333d] text-lg">{item.label}</span>
               </label>
-              <a href={item.link} className="text-[#38bdf8] text-1x1 font-semibold hover:underline">
+              <a
+                href={item.link}
+                className="text-[#38bdf8] text-1x1 font-semibold hover:underline"
+              >
                 Read More
               </a>
             </div>
           ))}
 
-          {/* Buttons */}
           <div className="flex justify-end mt-6 space-x-4">
             <button
               type="button"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import PopUps from "./PopUps";
 import Pages from "./Pages";
 import OurNetworks from "./OurNetworks.jsx";
@@ -70,10 +70,6 @@ const Home = () => {
   const initialText =
     "Join us in bridging the gap between surplus food and those in need, ensuring nourishment reaches every corner of our society.";
 
-  const [text, setText] = useState("");
-  const [valueTrue, setValueTrue] = useState(false);
-  let count = 0;
-
   return (
     <>
       <div className="bg-[#eeecdd]">
@@ -89,12 +85,12 @@ const Home = () => {
                 Transforming food excess into community support.
               </h1>
               <p className="text-[1.6em] mt-10 mx-4 text-white max-w-[80%]  font-medium">
-              Join us in bridging the gap between surplus food and those in need, ensuring nourishment reaches every corner of our society.
+              {initialText}
               </p>
             </div>
             <div className="mt-6 flex space-x-4 ">
               <button className="bg-[#13333E] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-[#1a282c] transition">
-                Learn More
+                <a href="/about">Learn More</a>
               </button>
               <button className="bg-white text-black font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-300 transition">
                 Get Started

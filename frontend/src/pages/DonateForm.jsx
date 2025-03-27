@@ -18,6 +18,7 @@ const DonateForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [responseURl, setResponseURl] = useState([]);
+  const [loadingLoc, setLoadingLoc] = useState(false);
 
   const [uploadedImages, setUploadedImages] = useState({});
   const [loading, setLoading] = useState(false);
@@ -38,8 +39,8 @@ const DonateForm = () => {
     imgUrl: "",
   });
 
-  const [donatedItems, setDonatedItems] = useState([]); // Stores all added items
-  const [pickupLocation, setPickupLocation] = useState({}); // Stores pickup location
+  const [donatedItems, setDonatedItems] = useState([]);
+  const [pickupLocation, setPickupLocation] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +57,7 @@ const DonateForm = () => {
       Perishables: <CalendarRange className="text-gray-700 w-6 h-6" />,
       Meat: <Beef className="text-gray-700 w-6 h-6" />,
     };
-    return icons[foodType] || null; // Returns the correct icon or null if not found
+    return icons[foodType] || null;
   };
 
   const handleAddItem = (e) => {
@@ -68,24 +69,25 @@ const DonateForm = () => {
         {
           id: Date.now(),
           foodType: formData.foodType,
-          foodName: formData.name, // Store correctly
+          foodName: formData.name,
           totalQuantity: formData.quantity,
-          expiryDate: formData.expiryDate, // Keep naming consistent
+          expiryDate: formData.expiryDate,
         },
       ]);
 
-      setFormData({ foodType: "", quantity: "", name: "", expiryDate: "" }); // Reset form
+      setFormData({ foodType: "", quantity: "", name: "", expiryDate: "" });
     }
   };
 
   const handleRemoveItem = (id) => {
-    setDonatedItems((prev) => prev.filter((item) => item.id !== id)); // Remove item by id
+    setDonatedItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleGetLocation = async() => {
+  const handleGetLocation = async () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
       try {
+        setLoadingLoc(true);
         const response = await axios.get(
           `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
         );
@@ -93,113 +95,127 @@ const DonateForm = () => {
         console.log("Address:", response.data);
       } catch (error) {
         console.error("Error fetching address:", error);
+      } finally {
+        setLoadingLoc(false);
       }
-
-
-
       setPickupLocation({ lat: latitude, lng: longitude });
     });
   };
-
+  const handleUploadFood = (e) => {
+    if (donatedItems.length === 0) {
+      alert("No donated items found!");
+      return;
+    } else {
+      setModalOpen(true);
+      setDonatedItems;
+    }
+  };
   const handleSubmitFood = async () => {
-    if (!isConfirmed) {
-        setModalOpen(true);  // 🔴 Open modal first
-        return;
-    }
-    
+    console.log(donatedItems);
+
     if (Object.keys(uploadedImages).length === 0) {
-        alert("Please select images first!");
-        return;
+      alert("Please select images first!");
+      return;
     }
-    
+
     setLoading(true);
     const formData = new FormData();
     Object.values(uploadedImages).forEach((file) => {
-        formData.append("images", file); // Append multiple files
+      formData.append("images", file);
     });
 
     try {
-        const uploadResponse = await axios.post("http://localhost:8080/uploadoncloud", formData);
-        const uploadedPredictions = uploadResponse.data.predictions;
+      const uploadResponse = await axios.post(
+        "http://localhost:8080/uploadoncloud",
+        formData
+      );
+      const uploadedPredictions = uploadResponse.data.predictions;
 
-        // 🟢 Extract URLs and Freshness Status
-        const uploadedImagesUrls = uploadedPredictions.map(item => item.image_url);
-        const freshnessResults = uploadedPredictions.map(item => item.prediction); 
-        // 🛑 Check for Stale Food
-        const staleItems = donatedItems.filter((_, index) => freshnessResults[index] !== "Fresh");        
-        if (staleItems.length > 0) {
-            const userChoice = window.confirm(
-                "Some food items are stale! \nDo you want to proceed without them?"
-            );
+      const uploadedImagesUrls = uploadedPredictions.map(
+        (item) => item.image_url
+      );
+      const freshnessResults = uploadedPredictions.map(
+        (item) => item.prediction
+      );
 
-            if (!userChoice) {
-                setLoading(false);
-                return; // Stop the process if user doesn't want to continue
-            }
+      const staleItems = donatedItems.filter(
+        (_, index) => freshnessResults[index] !== "Fresh"
+      );
+      if (staleItems.length > 0) {
+        const userChoice = window.confirm(
+          "Some food items are stale! \nDo you want to proceed without them?"
+        );
+
+        if (!userChoice) {
+          setLoading(false);
+          return;
         }
+      }
 
-        // 🟢 Filter out stale items if the user chooses to proceed
-        const filteredItems = donatedItems
-            .map((item, index) => ({ ...item, imgUrl: uploadedImagesUrls[index] || "" }))
-            .filter((_, index) => freshnessResults[index] === "Fresh"); // Remove stale items
+      const filteredItems = donatedItems
+        .map((item, index) => ({
+          ...item,
+          imgUrl: uploadedImagesUrls[index] || "",
+        }))
+        .filter((_, index) => freshnessResults[index] === "Fresh"); // Remove stale items
 
-        if (filteredItems.length === 0) {
-            alert("No fresh food remains to proceed!");
-            setLoading(false);
-            return;
-        }
-
-        setDonatedItems(filteredItems);
-
-        // 🟢 WAIT for the state to update before proceeding
-        await new Promise(resolve => setTimeout(resolve, 0));
-        // 🟢 Now, send the updated data to the backend
-        const data = {
-            donor: user?._id, // Donor ID
-            foodItems: filteredItems,  // 🟢 Updated `donatedItems`
-            pickupLocation: {
-                street: address.address.suburb,
-                city: address.address.city,
-                state: address.address.state,
-                pincode: address.address.postcode,
-                coordinates: pickupLocation,
-            },
-        };
-
-        console.log("Data being sent:", data);
-
-        const response = await axios.post(
-            "http://localhost:5000/api/food/upload-food",
-            data
-        );
-
-        console.log("Backend response:", response.data);
-        const sendSms = await axios.post(
-          "http://localhost:8080/upload-food",
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(sendSms.data);
-        setDonatedItems([]);
-        setPickupLocation("");
-    } catch (error) {
-        console.error(
-            "Error submitting food:",
-            error.response ? error.response.data : error.message
-        );
-    } finally {
+      if (filteredItems.length === 0) {
+        alert("No fresh food remains to proceed!");
         setLoading(false);
-    }
-};
+        return;
+      }
 
+      setDonatedItems(filteredItems);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const data = {
+        donor: user?._id, // Donor ID
+        foodItems: filteredItems,
+        pickupLocation: {
+          street: address.address.suburb,
+          city: address.address.city,
+          state: address.address.state,
+          pincode: address.address.postcode,
+          coordinates: pickupLocation,
+        },
+      };
+
+      console.log("Data being sent:", data);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/food/upload-food",
+        data
+      );
+
+      console.log("Backend response:", response.data);
+
+      const sendSms = await axios.post(
+        "http://localhost:8080/upload-food",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(sendSms.data);
+      setDonatedItems([]);
+      alert("Food submitted successfully!");
+      setPickupLocation("");
+    } catch (error) {
+      console.error(
+        "Error submitting food:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleImageChange = (event, itemId) => {
     const file = event.target.files[0];
     if (file) {
+      alert("Image Uploaded Successfully!");
       setUploadedImages((prev) => ({
         ...prev,
         [itemId]: file,
@@ -208,7 +224,7 @@ const DonateForm = () => {
   };
 
   return (
-    <div className="p-0 h-fit px-10 flex justify-between gap-15 pb-2 bg-[#F0ECCF]">
+    <div className="p-0 mt-5 h-fit px-10 flex justify-between gap-15 pb-2 bg-[#eecdd]">
       <div className="w-xl bg-transparent rounded-lg p-6 flex-1 pr-14 border-r-2">
         <h2 className="text-xl  mb-2 font-bold">Donate Food</h2>
         <p className="text-gray-600 mb-4">
@@ -218,7 +234,6 @@ const DonateForm = () => {
           onSubmit={handleAddItem}
           className="flex flex-col justify-center "
         >
-          {/* Food Name */}
           <div className="mb-4">
             <label htmlFor="name" className="font-medium text-lg">
               Food Name
@@ -234,7 +249,6 @@ const DonateForm = () => {
             />
           </div>
 
-          {/* Food Type */}
           <div className="mb-4">
             <label htmlFor="foodType" className="font-medium text-lg">
               Food Type
@@ -243,8 +257,9 @@ const DonateForm = () => {
               name="foodType"
               value={formData.foodType}
               onChange={handleChange}
-              className={`w-full border border-gray-300 focus:outline-none  p-2 rounded ${formData.foodType ? "text-black" : "text-gray-400"
-                }`}
+              className={`w-full border border-gray-300 focus:outline-none  p-2 rounded ${
+                formData.foodType ? "text-black" : "text-gray-400"
+              }`}
               required
             >
               <option value="">Select food type</option>
@@ -256,7 +271,6 @@ const DonateForm = () => {
             </select>
           </div>
 
-          {/* Quantity */}
           <div className="mb-4">
             <label htmlFor="quantity " className="font-medium text-lg">
               Quantity
@@ -272,8 +286,6 @@ const DonateForm = () => {
             />
           </div>
 
-
-          {/* date picker */}
           <div className="bg-transparent rounded-lg">
             <label className="block text-lg font-medium text-gray-800 mb-2">
               Expiration Date
@@ -282,14 +294,15 @@ const DonateForm = () => {
             <DatePicker
               className="p-2 w-full border border-gray-300 rounded"
               selected={formData.expiryDate}
-              onChange={(date) => setFormData((prev) => ({ ...prev, expiryDate: date }))}
+              onChange={(date) =>
+                setFormData((prev) => ({ ...prev, expiryDate: date }))
+              }
               dateFormat="yyyy-MM-dd"
               minDate={new Date()}
               placeholderText="Select Expiry Date"
             />
           </div>
 
-          {/* Add Item Button */}
           <button
             type="submit"
             className="w-1/2 cursor-pointer mb-4 mt-4 mx-auto bg-[#13333E] hover:bg-[#1d2d33] text-white p-2 rounded-[24px]"
@@ -298,7 +311,6 @@ const DonateForm = () => {
           </button>
         </form>
 
-        {/* Pickup Location */}
         <div className="mb-4">
           <input
             type="text"
@@ -306,35 +318,36 @@ const DonateForm = () => {
             value={address.display_name}
             onChange={(e) => setPickupLocation(e.target.value)}
             className="w-full border border-gray-300 focus:outline-none p-2 rounded"
+            disabled
             required
           />
         </div>
 
-        {/* Submit Button */}
         <div className="flex gap-4">
-          <div></div>
           <button
-            onClick={() => setModalOpen(true)}
-            className="w-2/3 cursor-pointer bg-[#13333E] text-white p-2 rounded-[24px] hover:bg-[#1d2e34] "
+            onClick={() => handleUploadFood()}
+            className="flex justify-center items-center w-2/3 cursor-pointer bg-[#13333E] text-white p-2 rounded-[24px] hover:bg-[#1d2e34] "
           >
             {loading ? "Model Processing..." : "Upload"}
             {loading && (
-              <div className="flex justify-center mt-4">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+              <div className="flex justify-center ">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
               </div>
             )}
           </button>
           <button
             onClick={handleGetLocation}
-            className="w-1/3 cursor-pointer bg-[#13333E] text-white p-2 rounded-[24px] hover:bg-[#1d2e34]"
+            className="flex justify-center items-center w-1/3 cursor-pointer bg-[#13333E] text-white p-2 rounded-[24px] hover:bg-[#1d2e34]"
           >
-            Get Location
+            {loadingLoc ? "Fetching Location..." : "Get Location"}
+            {loadingLoc && (
+              <div className="flex justify-center mt-4">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+              </div>
+            )}
           </button>
         </div>
-
       </div>
-
-      {/* Display Added Items Side by Side */}
 
       <div className="w-1/2 bg-transparent  rounded-lg p-6  flex flex-col justify-x-center ">
         <h1 className="text-2xl font-bold mb-2 mx-auto">List of Items</h1>
@@ -347,23 +360,18 @@ const DonateForm = () => {
             <div className="text-bold text-xl mb-4 text-center  pb-2 ">
               Added Items:
             </div>
-            <div className="flex gap-10 items-center">
-              {/* Remove Item Button */}
-            </div>
+            <div className="flex gap-10 items-center"></div>
             <div className="bg-transparent rounded-lg w-full">
               {donatedItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center space-x-45 p-3 rounded-md  align-center"
                 >
-                  {/* Left: Icon + Food Info */}
                   <div className="flex items-center gap-4">
-                    {/* Icon Wrapper */}
                     <div className="bg-transparent  p-2 rounded-lg">
                       {getFoodIcon(item.foodType)}
                     </div>
 
-                    {/* Food Name & Quantity */}
                     <div>
                       <p className="text-lg font-semibold text-gray-800">
                         {item.foodName}
@@ -391,7 +399,9 @@ const DonateForm = () => {
                     </label>
 
                     {uploadedImages[item.id] && (
-                      <p className="mt-2 text-sm text-gray-500">{uploadedImages[item.id].name}</p>
+                      <p className="mt-2 text-sm text-gray-500">
+                        {uploadedImages[item.id].name}
+                      </p>
                     )}
                   </div>
                   {/* Remove Button */}

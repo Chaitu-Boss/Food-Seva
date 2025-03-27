@@ -1,10 +1,10 @@
-import express from "express"
 import Donor from "../models/donorModel.js"
 import dotenv from "dotenv"
 import { tokenContract, provider, wallet } from "../config/web3.js"
 import { ethers } from "ethers"
 import fetch from "node-fetch"
 import twilio from "twilio"
+import mongoose from "mongoose"
 
 dotenv.config()
 
@@ -39,7 +39,7 @@ const reward = async (req, res) => {
     const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
     const { id } = req.body;
     const amountEth = 0.006;
-    const user = await Donor.findById({ id });
+    const user = await Donor.findById(new mongoose.Types.ObjectId(id));
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

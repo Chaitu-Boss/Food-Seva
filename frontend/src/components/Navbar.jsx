@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import dalle from '../assets/Navbar/dalle.png';
+import img from '../assets/Navbar/img1.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -17,37 +17,37 @@ const Navbar = () => {
   };
 
   return (
-    <div className='fixed top-0 left-0 right-0 bg-[#eeecdd] z-50'>
+    <div className='fixed top-0 left-0 right-0 bg-[#eeecdd] z-50 '>
       <div className='container mx-auto flex justify-between items-center px-4'>
         
         {/* Logo */}
-        <div className='flex items-center'>
-          <img className='pl-5' src={dalle} alt="Logo" height={55} width={100} />
+        <div className='flex items-center p-0'>
+          <img className='pl-5' src={img} alt="Logo" height={50} width={110} />
         </div>
 
         <div className='flex items-center pr-10 space-x-10 text-black text-lg'>
-          <NavLink to="/" className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+          <NavLink to="/" className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
             <p>Home</p>
           </NavLink>
-          <NavLink to="/about" className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+          <NavLink to="/about" className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
             <p>About Us</p>
           </NavLink>
-          <NavLink to="/contact" className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+          <NavLink to="/contact" className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
             <p>Contact Us</p>
           </NavLink>
 
           {isLoggedIn && (
-            <NavLink to="/dashboard" className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+            <NavLink to="/dashboard" className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
               <p>Dashboard</p>
             </NavLink>
           )}
 
           {isLoggedIn ? (
-            <button onClick={handleLogout} className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+            <button onClick={handleLogout} className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
               <p>Logout</p>
             </button>
           ) : (
-            <NavLink to="/login" className="font-barlow font-normal text-lg text-black leading-custom cursor-pointer">
+            <NavLink to="/login" className="font-barlow font-bold text-lg text-black leading-custom cursor-pointer">
               <p>Login</p>
             </NavLink>
           )}

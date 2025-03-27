@@ -144,7 +144,7 @@ const LiveTracking = () => {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        onLoad={(map) => (mapRef.current = map)} // Correctly setting mapRef
+        onLoad={(map) => (mapRef.current = map)}
         center={pickupLocation}
         zoom={14}
       >

@@ -7,7 +7,6 @@ describe("RewardToken", function () {
   beforeEach(async function () {
     [owner, addr1, addr2] = await ethers.getSigners();
 
-    // Deploy the contract
     const RewardTokenFactory = await ethers.getContractFactory("RewardToken");
     rewardToken = await RewardTokenFactory.deploy(owner.address);
     await rewardToken.waitForDeployment();

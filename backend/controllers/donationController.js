@@ -1,9 +1,11 @@
 import { ethers } from "ethers";
-import fs from 'fs';
+import DonorFood from "../models/foodItemModel.js";
 
 export const getDonations = async (req, res) => {
+  console.log(req.params.donorId);
   try {
-    const donations = await FoodItem.find({ donor: req.params.donorId });
+    const donations = await DonorFood.find({ donor: req.params.donorId });
+    console.log(donations);
     res.status(200).json(donations);
   } catch (error) {
     res.status(500).json({ message: "Error fetching donations", error });
@@ -11,276 +13,275 @@ export const getDonations = async (req, res) => {
 };
 const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-// const contractJson = JSON.parse(fs.readFileSync("../hardhat/artifacts/contracts/FoodDonation.sol/FoodDonation.json", "utf8"));
 const abi = [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "donationId",
-        "type": "uint256"
+        indexed: true,
+        internalType: "uint256",
+        name: "donationId",
+        type: "uint256",
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      }
+        indexed: true,
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
     ],
-    "name": "FoodClaimed",
-    "type": "event"
+    name: "FoodClaimed",
+    type: "event",
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "donor",
-        "type": "address"
+        indexed: true,
+        internalType: "address",
+        name: "donor",
+        type: "address",
       },
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "foodDetails",
-        "type": "string"
+        indexed: false,
+        internalType: "string",
+        name: "foodDetails",
+        type: "string",
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
+        indexed: false,
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
       },
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "location",
-        "type": "string"
+        indexed: false,
+        internalType: "string",
+        name: "location",
+        type: "string",
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
     ],
-    "name": "FoodDonated",
-    "type": "event"
+    name: "FoodDonated",
+    type: "event",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "donationId",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "donationId",
+        type: "uint256",
+      },
     ],
-    "name": "claimFood",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "claimFood",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
-    "name": "claimedDonations",
-    "outputs": [
+    name: "claimedDonations",
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "string",
-        "name": "foodDetails",
-        "type": "string"
+        internalType: "string",
+        name: "foodDetails",
+        type: "string",
       },
       {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
       },
       {
-        "internalType": "string",
-        "name": "location",
-        "type": "string"
-      }
+        internalType: "string",
+        name: "location",
+        type: "string",
+      },
     ],
-    "name": "donateFood",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "donateFood",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
-    "name": "donations",
-    "outputs": [
+    name: "donations",
+    outputs: [
       {
-        "internalType": "address",
-        "name": "donor",
-        "type": "address"
+        internalType: "address",
+        name: "donor",
+        type: "address",
       },
       {
-        "internalType": "string",
-        "name": "foodDetails",
-        "type": "string"
+        internalType: "string",
+        name: "foodDetails",
+        type: "string",
       },
       {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "quantity",
+        type: "uint256",
       },
       {
-        "internalType": "string",
-        "name": "location",
-        "type": "string"
+        internalType: "string",
+        name: "location",
+        type: "string",
       },
       {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
       },
       {
-        "internalType": "bool",
-        "name": "claimed",
-        "type": "bool"
-      }
+        internalType: "bool",
+        name: "claimed",
+        type: "bool",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "getAllDonations",
-    "outputs": [
+    inputs: [],
+    name: "getAllDonations",
+    outputs: [
       {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
       },
       {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
       },
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
       },
       {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
       },
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
       },
       {
-        "internalType": "bool[]",
-        "name": "",
-        "type": "bool[]"
-      }
+        internalType: "bool[]",
+        name: "",
+        type: "bool[]",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
     ],
-    "name": "getDonation",
-    "outputs": [
+    name: "getDonation",
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        internalType: "address",
+        name: "",
+        type: "address",
       },
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        internalType: "string",
+        name: "",
+        type: "string",
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        internalType: "string",
+        name: "",
+        type: "string",
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "getDonationsCount",
-    "outputs": [
+    inputs: [],
+    name: "getDonationsCount",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
+    inputs: [],
+    name: "owner",
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, abi, wallet);
 export const recordOnChain = async (req, res) => {
@@ -289,8 +290,6 @@ export const recordOnChain = async (req, res) => {
     const tx = await contract.donateFood(foodDetails, quantity, location);
     await tx.wait();
     res.json({ message: "Food donation recorded on blockchain!" });
-
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -298,7 +297,14 @@ export const recordOnChain = async (req, res) => {
 
 export const getDonationsFromChain = async (req, res) => {
   try {
-    const [donors, foodDetails, quantities, locations, timestamps, claimedStatuses] = await contract.getAllDonations();
+    const [
+      donors,
+      foodDetails,
+      quantities,
+      locations,
+      timestamps,
+      claimedStatuses,
+    ] = await contract.getAllDonations();
     const numDonations = donors.length;
     const formattedDonations = [];
     for (let i = 0; i < numDonations; i++) {
@@ -309,7 +315,7 @@ export const getDonationsFromChain = async (req, res) => {
         quantity: Number(quantities[i]),
         location: locations[i],
         timestamp: Number(timestamps[i]),
-        claimed: claimedStatuses[i]
+        claimed: claimedStatuses[i],
       });
     }
 
@@ -318,4 +324,4 @@ export const getDonationsFromChain = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Error fetching donations" });
   }
-}
+};

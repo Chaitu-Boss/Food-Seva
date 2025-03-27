@@ -20,7 +20,7 @@ cloudinary.config(
     api_secret = os.getenv("CLOUDINARY_API_SECRET"),
     secure=True
 )
-model = tf.keras.models.load_model(r"C:\Users\Chaitanya Raut\Desktop\Bowser-Stack-LOC7\flask\app\utils\food_classifier.h5")
+model = tf.keras.models.load_model(r"D:\Programming\Foodseva2\Food-Seva\flask\app\utils\food_classifier.h5")
 
 def upload_to_cloudinary(file):
     response = cloudinary.uploader.upload(file)
@@ -36,7 +36,8 @@ def calculate_distance(coord1, coord2):
 NGO_LIST = [
     {"name": "Helping Hands", "phone": "+917045454218", "address": {"coordinates": [18.940123, 72.842345]}},
     {"name": "Food Relief NGO", "phone": "+918779631531", "address": {"coordinates": [18.936541, 72.815234]}},
-    {"name": "Hunger Free India", "phone": "+919152747228", "address": {"coordinates": [28.6900, 77.1200]}}
+    {"name": "Hunger Free India", "phone": "+919152747228", "address": {"coordinates": [28.6900, 77.1200]}},
+    {"name": "GareebDesh", "phone": "+917045454218", "address": {"coordinates": [19.280967, 72.855766]}},
 ]
 def predict_image(image_url):
     response = requests.get(image_url)
@@ -61,7 +62,7 @@ def upload_food():
               ngo for ngo in NGO_LIST if calculate_distance(donor_location, ngo["address"]["coordinates"]) <= 5
         ]
         if not nearby_ngos:
-            return jsonify({"message": "No NGOs found within 5 km"}), 404
+            return jsonify({"message": "No NGOs found within 5 km"}), 200
 
         sms_results = []
         for ngo in nearby_ngos:
@@ -95,14 +96,14 @@ def uploadoncloud():
     files = request.files.getlist("images")
 
     for file in files:
-        image_url = upload_to_cloudinary(file)  # Ensure this function works properly
+        image_url = upload_to_cloudinary(file)
         if image_url:
-            label = predict_image(image_url) # Ensure this function returns a value
+            label = predict_image(image_url)
             predictions.append({"image_url": image_url, "prediction": label})
         else:
-            return jsonify({"error": "Image upload failed"}), 500  # Handle failed uploads
+            return jsonify({"error": "Image upload failed"}), 500
 
     if not predictions:
         return jsonify({"error": "No valid predictions"}), 400
     
-    return jsonify({"message": "Upload successful", "predictions": predictions}), 200  # ✅ Always return response
+    return jsonify({"message": "Upload successful", "predictions": predictions}), 200

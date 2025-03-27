@@ -6,12 +6,16 @@ const foodItemSchema = new mongoose.Schema({
   totalQuantity: { type: Number, required: true },
   expiryDate: { type: Date, required: true },
   imgUrl: { type: String, default: "" },
-  status: { type: String, enum: ["Available", "Claimed", "Expired"], default: "Available" },
+  status: {
+    type: String,
+    enum: ["Available", "Claimed", "Expired"],
+    default: "Available",
+  },
 });
 
 const donorFoodSchema = new mongoose.Schema({
   donor: { type: mongoose.Schema.Types.ObjectId, ref: "Donor", required: true },
-  foodItems: [foodItemSchema], 
+  foodItems: [foodItemSchema],
   pickupLocation: {
     street: String,
     city: String,
@@ -38,9 +42,8 @@ donorFoodSchema.pre("save", function (next) {
   next();
 });
 
-
 donorFoodSchema.post("save", async function (doc, next) {
-  await doc.updateOne({ $pull: { foodItems: { status: "Expired" } } }); // ✅ Remove expired items
+  await doc.updateOne({ $pull: { foodItems: { status: "Expired" } } });
   next();
 });
 
