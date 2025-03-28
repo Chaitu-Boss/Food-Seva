@@ -26,7 +26,7 @@ const ChatAI = () => {
     <div>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed flex bottom-5 right-5 bg-[#13333E] text-white space-x-4 p-3 rounded-full shadow-lg hover:bg-[#1a282c] transition z-50 rounded-full cursor-pointer"
+        className="fixed flex bottom-5 right-5 bg-[#13333E] text-white space-x-4 p-3 rounded-full shadow-lg hover:bg-[#1a282c] transition z-50 cursor-pointer"
       >
         <img src={chatbot} alt="" className="w-10 rounded-full border-none" />
       </button>

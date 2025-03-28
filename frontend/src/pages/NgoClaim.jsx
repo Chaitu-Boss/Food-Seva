@@ -180,7 +180,10 @@ const NgoClaim = () => {
       }
     } catch (error) {
       console.error("Error claiming food:", error);
-      alert("Failed to claim food");
+      alert(
+        `Error: ${error.response.data.message} \n Redirecting to page where food items that are available for claim`
+      );
+      navigate("/ngo-request");
     } finally {
       setLoading(false);
     }
@@ -208,7 +211,7 @@ const NgoClaim = () => {
               options={{ strokeColor: "#00008B", strokeWeight: 6 }}
             />
           )}
-          
+
           {deliveryStarted && (
             <Marker
               position={currentLocation}

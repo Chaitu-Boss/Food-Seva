@@ -82,6 +82,11 @@ export const claimFood = async (req, res) => {
           .status(404)
           .json({ message: `Food item with ID ${foodItemId} not found` });
       }
+      if (foodItem.status === "Claimed") {
+        return res
+          .status(400)
+          .json({ message: "Food item has already been claimed !!" });
+      }
 
       console.log(
         `Existing Quantity of ${foodItem.foodName}:`,
