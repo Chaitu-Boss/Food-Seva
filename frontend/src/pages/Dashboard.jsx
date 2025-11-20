@@ -123,13 +123,13 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold text-gray-800">
             {user?.role === "donor" ? "Your Donations" : "Your Claims"}
           </h1>
-          {user?.role === "donor" ? (
+          {/* {user?.role === "donor" ? (
             <h1 className="text-2xl font-bold text-gray-800">
               Your rewards: {rewards}
             </h1>
           ) : (
             ""
-          )}
+          )} */}
         </div>
 
         {loading ? (

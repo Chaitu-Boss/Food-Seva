@@ -20,7 +20,7 @@ cloudinary.config(
     api_secret = os.getenv("CLOUDINARY_API_SECRET"),
     secure=True
 )
-model = tf.keras.models.load_model(r"D:\Programming\Foodseva2\Food-Seva\flask\app\utils\food_classifier.h5")
+model = tf.keras.models.load_model(r"C:\AAGAM SHAH\New folder\Food-Seva\flask\app\utils\food_classifier.h5")
 
 def upload_to_cloudinary(file):
     response = cloudinary.uploader.upload(file)

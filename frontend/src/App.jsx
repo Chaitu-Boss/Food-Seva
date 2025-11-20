@@ -15,7 +15,7 @@ const App = () => {
           <AllRoutes />
         </div>
 
-        <ChatAI />
+        {/* <ChatAI /> */}
         <Footer/>
       </div>
     </Router>
